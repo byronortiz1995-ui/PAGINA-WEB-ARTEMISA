@@ -3,43 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARTEMISA | Plataforma Dinámica de Servicios & Comercio</title>
+    <title>ARTEMISA | Catálogo Inteligente</title>
     <style>
         :root { --gold: #d4af37; --black: #121212; --green: #25d366; --gray: #f4f4f9; --dark-gray: #333; --red: #e74c3c; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--gray); margin: 0; color: var(--dark-gray); }
-        
-        header { background: var(--black); color: var(--gold); padding: 3rem 1rem; text-align: center; border-bottom: 5px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        header { background: var(--black); color: var(--gold); padding: 3rem 1rem; text-align: center; border-bottom: 5px solid var(--gold); }
         header h1 { margin: 0; font-size: 3rem; letter-spacing: 4px; }
-        header p { margin: 10px 0 0; font-weight: 300; color: #fff; font-size: 1.1rem; }
-
+        header p { margin: 10px 0 0; font-weight: 300; color: #fff; }
         .container { max-width: 1200px; margin: auto; padding: 20px; }
-
-        /* NAVEGACIÓN */
         .nav-main { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
         .btn-main { background: var(--black); color: white; border: 2px solid var(--black); padding: 12px 25px; cursor: pointer; border-radius: 30px; font-weight: bold; transition: 0.3s; }
-        .btn-main.active { background: var(--gold); color: var(--black); border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-
+        .btn-main.active { background: var(--gold); color: var(--black); }
         .nav-sub { display: none; justify-content: center; gap: 10px; margin-bottom: 30px; background: #e0e0e0; padding: 15px; border-radius: 15px; flex-wrap: wrap; }
-        .btn-sub { background: #666; font-size: 0.85rem; border: none; padding: 10px 20px; color: white; cursor: pointer; border-radius: 20px; transition: 0.3s; font-weight: bold; }
+        .btn-sub { background: #666; font-size: 0.85rem; border: none; padding: 10px 20px; color: white; cursor: pointer; border-radius: 20px; font-weight: bold; }
         .btn-sub.active { background: var(--gold); color: var(--black); }
-
-        /* GRID Y TARJETAS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; min-height: 200px; }
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; display: none; border: 1px solid #eee; flex-direction: column; }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: 0.3s; }
+        .card:hover { transform: translateY(-8px); }
         .card-img { width: 100%; height: 200px; object-fit: cover; background: #ddd; }
-        .card-content { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
-        
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
         .tag-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .tag { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; background: #eee; padding: 5px 10px; border-radius: 5px; color: #666; }
-        .stock-tag { font-size: 0.75rem; font-weight: bold; color: #27ae60; }
-        .stock-out { color: var(--red); }
-
-        .local-info { font-size: 0.8rem; color: #888; margin-bottom: 15px; font-style: italic; }
-        .price-tag { font-size: 1.4rem; font-weight: bold; color: var(--black); margin-bottom: 15px; background: #fafafa; padding: 10px; border-radius: 8px; text-align: center; border: 1px dashed #ccc; }
-        .old-price { font-size: 1rem; color: #999; text-decoration: line-through; margin-right: 10px; font-weight: normal; }
-
-        .btn-wa { display: block; width: 100%; background: var(--green); color: white; text-align: center; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+        .tag { font-size: 0.7rem; font-weight: bold; background: #eee; padding: 5px 10px; border-radius: 5px; }
+        .price-tag { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; background: #fafafa; padding: 10px; border-radius: 8px; text-align: center; border: 1px dashed #ccc; }
+        .btn-wa { display: block; width: 100%; background: var(--green); color: white; text-align: center; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
         .btn-wa:disabled { background: #bbb; cursor: not-allowed; }
     </style>
 </head>
@@ -71,82 +57,72 @@
     </div>
 
     <div class="grid" id="catalogo">
-        <p style="text-align:center; width:100%;">Sincronizando con la nube de Artemisa...</p>
+        <p style="text-align:center; width:100%;">Sincronizando con Artemisa El Pangui...</p>
     </div>
 </div>
 
 <script>
-    const TEL = "593939344200"; // Número de WhatsApp para El Pangui
+    const TEL = "593939344200";
     const API_URL = "https://script.google.com/macros/s/AKfycbzKn_Cztd-GiMnvlTe7aGruTJ0CpMqXqm59RQ3Am8swFQolEJ7RBv5C9HTmjDs6HrhAVQ/exec";
+
+    // Función mágica para encontrar datos sin importar el nombre de la columna
+    function val(obj, keys) {
+        const found = Object.keys(obj).find(k => keys.includes(k.toLowerCase().trim()));
+        return found ? obj[found] : "";
+    }
 
     async function cargarCatalogo() {
         try {
             const res = await fetch(API_URL);
-            if (!res.ok) throw new Error("Fallo al conectar con Google Script");
+            if (!res.ok) throw new Error("Error de red");
             const productos = await res.json();
             
             const grid = document.getElementById('catalogo');
             grid.innerHTML = '';
 
             productos.forEach(p => {
-                // Normalización de menús desplegables (Mayúsculas/Minúsculas)
-                const tipoRaw = (p.Tipo || p.tipo || "").toLowerCase();
-                const subRaw = (p.Subcategoria || p.subcategoria || p.Sub || "").toLowerCase();
-                
-                // Clasificación inteligente para menús desplegables
-                const esServicio = tipoRaw.includes('servicio');
+                // Buscamos los datos usando múltiples opciones de nombres
+                const tipo = val(p, ["tipo", "categoria", "type"]).toLowerCase();
+                const sub = val(p, ["subcategoria", "sub", "clase"]).toLowerCase();
+                const titulo = val(p, ["titulo", "nombre", "title", "item"]);
+                const precio = val(p, ["precio", "valor", "costo", "price"]).toString();
+                const desc = val(p, ["descripcion", "detalle", "description"]);
+                const img = val(p, ["imagenurl", "imagen", "foto", "url"]);
+                const stock = parseInt(val(p, ["stock", "inventario", "cantidad"])) || 0;
+
+                const esServicio = tipo.includes('servicio');
                 const catPrincipal = esServicio ? 'servicio' : 'tienda';
-
-                const titulo = p.Titulo || p.titulo || "Sin Título";
-                const precio = p.Precio || p.precio || "Consultar";
-                const stockCount = parseInt(p.Stock || p.stock) || 0;
-                const agotado = !esServicio && stockCount <= 0;
-
+                const agotado = !esServicio && stock <= 0;
                 const esCotizar = /cotizar|definir|acordar/i.test(precio);
-                const precioTexto = esCotizar ? precio : (precio.toString().includes('$') ? precio : `$${precio}`);
 
                 grid.innerHTML += `
-                    <div class="card" data-tipo="${catPrincipal}" data-sub="${subRaw}" style="display:flex">
-                        ${p.ImagenURL || p.imagenURL ? `<img src="${p.ImagenURL || p.imagenURL}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
+                    <div class="card" data-tipo="${catPrincipal}" data-sub="${sub}" style="display:flex">
+                        ${img ? `<img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
                         <div class="card-content">
                             <div class="tag-row">
-                                <span class="tag">${subRaw.toUpperCase()}</span>
-                                ${!esServicio ? (agotado ? `<span class="stock-tag stock-out">🚫 Agotado</span>` : `<span class="stock-tag">📦 Stock: ${stockCount}</span>`) : ''}
+                                <span class="tag">${sub.toUpperCase()}</span>
+                                ${!esServicio ? `<span class="tag" style="color:${agotado?'red':'green'}">${agotado?'Agotado':'Stock: '+stock}</span>` : ''}
                             </div>
                             <h3>${titulo}</h3>
-                            <p>${p.Descripcion || p.descripcion || ""}</p>
-                            <p class="local-info">📍 ${p.Local || p.local || "Artemisa - El Pangui"}</p>
-                            <div class="price-tag">
-                                ${p.PrecioAnterior || p.precioAnterior ? `<span class="old-price">$${p.PrecioAnterior || p.precioAnterior}</span>` : ''} ${precioTexto}
-                            </div>
-                            <button class="btn-wa" ${agotado ? 'disabled' : ''} onclick="comprar('${titulo}')">
-                                ${agotado ? "PRODUCTO AGOTADO" : (esCotizar ? "SOLICITAR COTIZACIÓN" : "ADQUIRIR AHORA")}
+                            <p style="font-size:0.9rem; color:#555;">${desc}</p>
+                            <div class="price-tag">${esCotizar ? precio : '$'+precio}</div>
+                            <button class="btn-wa" ${agotado ? 'disabled' : ''} onclick="window.open('https://wa.me/${TEL}?text=Hola Artemisa, me interesa: *${titulo}*')">
+                                ${agotado ? 'AGOTADO' : (esCotizar ? 'SOLICITAR COTIZACIÓN' : 'ADQUIRIR AHORA')}
                             </button>
                         </div>
                     </div>`;
             });
             ui('todos', document.querySelector('.btn-main'));
         } catch (e) {
-            console.error("Error en sincronización:", e);
-            document.getElementById('catalogo').innerHTML = "<p style='text-align:center;'>Error de conexión con la nube de Artemisa. Por favor, refresque la página.</p>";
+            document.getElementById('catalogo').innerHTML = "<p style='text-align:center;'>Error de conexión. Verifica la implementación en Google Script.</p>";
         }
-    }
-
-    function comprar(titulo) {
-        const msgWa = `Hola Artemisa, me interesa: *${titulo}*`;
-        // Reta el stock en la hoja de cálculo antes de redirigir
-        fetch(`${API_URL}?vender=${encodeURIComponent(titulo)}`).finally(() => {
-            window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(msgWa)}`, '_blank');
-        });
     }
 
     function ui(tipo, btn) {
         document.querySelectorAll('.btn-main').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
         document.getElementById('sub-servicio').style.display = (tipo === 'servicio') ? 'flex' : 'none';
         document.getElementById('sub-tienda').style.display = (tipo === 'tienda') ? 'flex' : 'none';
-        
         filtrar(tipo, null);
     }
 
@@ -158,7 +134,6 @@
         document.querySelectorAll('.card').forEach(card => {
             const t = card.dataset.tipo;
             const s = card.dataset.sub;
-            // Búsqueda por inclusión para manejar menús desplegables compuestos
             const mostrar = (criterio === 'todos' || t.includes(criterio) || s.includes(criterio));
             card.style.display = mostrar ? 'flex' : 'none';
         });
