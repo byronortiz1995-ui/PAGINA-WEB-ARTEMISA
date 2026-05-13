@@ -30,12 +30,17 @@
         .card-img { width: 100%; height: 200px; object-fit: cover; background: #ddd; }
         .card-content { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
         
-        .tag { align-self: flex-start; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; background: #eee; padding: 5px 10px; border-radius: 5px; color: #666; margin-bottom: 10px; }
+        .tag-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .tag { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; background: #eee; padding: 5px 10px; border-radius: 5px; color: #666; }
+        .stock-tag { font-size: 0.75rem; font-weight: bold; color: #27ae60; }
+        .stock-out { color: #e74c3c; }
+
         .local-info { font-size: 0.8rem; color: #888; margin-bottom: 15px; font-style: italic; }
         .price-tag { font-size: 1.4rem; font-weight: bold; color: var(--black); margin-bottom: 15px; background: #fafafa; padding: 10px; border-radius: 8px; text-align: center; border: 1px dashed #ccc; }
         .old-price { font-size: 1rem; color: #999; text-decoration: line-through; margin-right: 10px; font-weight: normal; }
 
-        .btn-wa { display: block; width: 100%; background: var(--green); color: white; text-align: center; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; }
+        .btn-wa { display: block; width: 100%; background: var(--green); color: white; text-align: center; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+        .btn-wa:disabled { background: #bbb; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -72,44 +77,52 @@
 
 <script>
     const TEL = "593939344200";
-    // TU URL DE PUBLICACIÓN CSV (Asegúrate de que sea la de tu nueva hoja)
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQofPbA7yArDNbdH1gpJgc0bak9LO9QEGZJr0R0-uDZZ88wH0_Q6HxZ9wnhK43Cq-ui336PgFA2rYe-/pub?gid=0&single=true&output=csv";
+    
+    // REEMPLAZA ESTA URL POR LA DE TU NUEVA IMPLEMENTACIÓN (LA QUE TERMINA EN /exec)
+    const API_URL = "PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT";
 
     async function cargarCatalogo() {
         try {
-            const res = await fetch(CSV_URL);
-            const data = await res.text();
-            // Filtramos filas vacías
-            const filas = data.split(/\r?\n/).slice(1).filter(f => f.trim() !== "");
+            const res = await fetch(API_URL);
+            const productos = await res.json();
             
             const grid = document.getElementById('catalogo');
             grid.innerHTML = '';
 
-            filas.forEach(fila => {
-                // Regex avanzado para manejar comas dentro de textos entre comillas
-                const columnas = fila.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if(columnas.length < 5) return;
+            productos.forEach(p => {
+                // Identificamos si es servicio o producto
+                const esServicio = p.Tipo.toLowerCase() === 'servicio';
+                const stockCount = parseInt(p.Stock) || 0;
+                const agotado = !esServicio && stockCount <= 0;
 
-                // Mapeo dinámico según el orden del Panel Administrativo
-                const [tipo, sub, tit, desc, precio, old, img, local, bText, cMsg] = columnas.map(c => c?.trim().replace(/^"|"$/g, '') || "");
+                const esCotizar = /cotizar|definir|acordar/i.test(p.Precio);
+                const textoPrecio = esCotizar ? p.Precio : `$${p.Precio}`;
+                const textoBoton = agotado ? "PRODUCTO AGOTADO" : (p.BtnText || (esCotizar ? "SOLICITAR COTIZACIÓN" : "ADQUIRIR AHORA"));
+                const msgWa = p.CustomMsg || `Hola Artemisa, me interesa: *${p.Titulo}*`;
 
-                const esCotizar = /cotizar|definir|acordar/i.test(precio);
-                const textoPrecio = esCotizar ? precio : `$${precio}`;
-                const textoBoton = bText || (esCotizar ? "SOLICITAR COTIZACIÓN" : "ADQUIRIR AHORA");
-                const msgWa = cMsg || `Hola Artemisa, me interesa: *${tit}*`;
+                // Generar etiqueta de stock solo para productos
+                let stockHTML = '';
+                if (!esServicio) {
+                    stockHTML = agotado 
+                        ? `<span class="stock-tag stock-out">🚫 Agotado</span>` 
+                        : `<span class="stock-tag">📦 Stock: ${stockCount}</span>`;
+                }
 
                 grid.innerHTML += `
-                    <div class="card" data-tipo="${tipo.toLowerCase()}" data-sub="${sub.toLowerCase()}" style="display:flex">
-                        ${img ? `<img src="${img}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
+                    <div class="card" data-tipo="${p.Tipo.toLowerCase()}" data-sub="${p.Subcategoria.toLowerCase()}" style="display:flex">
+                        ${p.ImagenURL ? `<img src="${p.ImagenURL}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
                         <div class="card-content">
-                            <span class="tag">${sub.toUpperCase()}</span>
-                            <h3>${tit}</h3>
-                            <p>${desc}</p>
-                            ${local ? `<p class="local-info">📍 Proveedor: ${local}</p>` : ''}
-                            <div class="price-tag">
-                                ${old ? `<span class="old-price">$${old}</span>` : ''} ${textoPrecio}
+                            <div class="tag-row">
+                                <span class="tag">${p.Subcategoria.toUpperCase()}</span>
+                                ${stockHTML}
                             </div>
-                            <button class="btn-wa" onclick="window.open('https://wa.me/${TEL}?text=${encodeURIComponent(msgWa)}')">
+                            <h3>${p.Titulo}</h3>
+                            <p>${p.Descripcion}</p>
+                            ${p.Local ? `<p class="local-info">📍 Proveedor: ${p.Local}</p>` : ''}
+                            <div class="price-tag">
+                                ${p.PrecioAnterior ? `<span class="old-price">$${p.PrecioAnterior}</span>` : ''} ${textoPrecio}
+                            </div>
+                            <button class="btn-wa" ${agotado ? 'disabled' : ''} onclick="comprar('${p.Titulo}', '${msgWa}')">
                                 ${textoBoton}
                             </button>
                         </div>
@@ -120,6 +133,19 @@
             console.error("Error en sincronización:", e);
             document.getElementById('catalogo').innerHTML = "<p>Error de conexión con la nube de Artemisa. Por favor, refresque la página.</p>";
         }
+    }
+
+    // Función artesanal para descontar stock y abrir WhatsApp
+    function comprar(titulo, mensaje) {
+        // Notificamos a la API para que reste el stock en la hoja de cálculo
+        fetch(`${API_URL}?vender=${encodeURIComponent(titulo)}`)
+            .then(() => {
+                window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(mensaje)}`, '_blank');
+            })
+            .catch(err => {
+                console.error("Error al procesar stock, abriendo WhatsApp de todos modos...", err);
+                window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(mensaje)}`, '_blank');
+            });
     }
 
     function ui(tipo, btn) {
@@ -133,9 +159,7 @@
         filtrar(tipo, null);
     }
 
-    function tienda(btn) {
-        ui('tienda', btn);
-    }
+    function tienda(btn) { ui('tienda', btn); }
 
     function filtrar(criterio, btn) {
         if(btn) {
@@ -148,7 +172,6 @@
         });
     }
 
-    // Carga inicial
     cargarCatalogo();
 </script>
 </body>
