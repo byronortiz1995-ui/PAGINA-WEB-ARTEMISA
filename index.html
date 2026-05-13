@@ -3,31 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARTEMISA | Catálogo Dinámico</title>
+    <title>ARTEMISA | Plataforma Dinámica de Servicios & Comercio</title>
     <style>
         :root { --gold: #d4af37; --black: #121212; --green: #25d366; --gray: #f4f4f9; --dark-gray: #333; --red: #e74c3c; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--gray); margin: 0; color: var(--dark-gray); }
+        
         header { background: var(--black); color: var(--gold); padding: 3rem 1rem; text-align: center; border-bottom: 5px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         header h1 { margin: 0; font-size: 3rem; letter-spacing: 4px; }
         header p { margin: 10px 0 0; font-weight: 300; color: #fff; font-size: 1.1rem; }
+
         .container { max-width: 1200px; margin: auto; padding: 20px; }
+
+        /* NAVEGACIÓN */
         .nav-main { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
         .btn-main { background: var(--black); color: white; border: 2px solid var(--black); padding: 12px 25px; cursor: pointer; border-radius: 30px; font-weight: bold; transition: 0.3s; }
-        .btn-main.active { background: var(--gold); color: var(--black); border-color: var(--gold); }
+        .btn-main.active { background: var(--gold); color: var(--black); border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+
         .nav-sub { display: none; justify-content: center; gap: 10px; margin-bottom: 30px; background: #e0e0e0; padding: 15px; border-radius: 15px; flex-wrap: wrap; }
         .btn-sub { background: #666; font-size: 0.85rem; border: none; padding: 10px 20px; color: white; cursor: pointer; border-radius: 20px; transition: 0.3s; font-weight: bold; }
         .btn-sub.active { background: var(--gold); color: var(--black); }
+
+        /* GRID Y TARJETAS */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; min-height: 200px; }
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; display: flex; border: 1px solid #eee; flex-direction: column; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; display: none; border: 1px solid #eee; flex-direction: column; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
         .card-img { width: 100%; height: 200px; object-fit: cover; background: #ddd; }
         .card-content { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+        
         .tag-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .tag { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; background: #eee; padding: 5px 10px; border-radius: 5px; color: #666; }
         .stock-tag { font-size: 0.75rem; font-weight: bold; color: #27ae60; }
         .stock-out { color: var(--red); }
+
+        .local-info { font-size: 0.8rem; color: #888; margin-bottom: 15px; font-style: italic; }
         .price-tag { font-size: 1.4rem; font-weight: bold; color: var(--black); margin-bottom: 15px; background: #fafafa; padding: 10px; border-radius: 8px; text-align: center; border: 1px dashed #ccc; }
         .old-price { font-size: 1rem; color: #999; text-decoration: line-through; margin-right: 10px; font-weight: normal; }
+
         .btn-wa { display: block; width: 100%; background: var(--green); color: white; text-align: center; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; transition: 0.3s; }
         .btn-wa:disabled { background: #bbb; cursor: not-allowed; }
     </style>
@@ -55,77 +66,77 @@
 
     <div id="sub-tienda" class="nav-sub">
         <button class="btn-sub" onclick="filtrar('ferreteria', this)">Ferretería</button>
-        <button class="btn-sub" onclick="filtrar('accesorios', this) ">Accesorios</button>
+        <button class="btn-sub" onclick="filtrar('accesorios', this)">Accesorios</button>
         <button class="btn-sub" onclick="filtrar('promo', this)">🔥 Ofertas</button>
     </div>
 
     <div class="grid" id="catalogo">
-        <p style="text-align:center; width:100%;">Conectando con la nube en Zamora...</p>
+        <p style="text-align:center; width:100%;">Sincronizando con la nube de Artemisa...</p>
     </div>
 </div>
 
 <script>
-    const TEL = "593939344200";
+    const TEL = "593939344200"; // Número de WhatsApp para El Pangui
     const API_URL = "https://script.google.com/macros/s/AKfycbzKn_Cztd-GiMnvlTe7aGruTJ0CpMqXqm59RQ3Am8swFQolEJ7RBv5C9HTmjDs6HrhAVQ/exec";
 
     async function cargarCatalogo() {
         try {
             const res = await fetch(API_URL);
-            if (!res.ok) throw new Error("Respuesta de red no válida");
+            if (!res.ok) throw new Error("Fallo al conectar con Google Script");
             const productos = await res.json();
             
             const grid = document.getElementById('catalogo');
             grid.innerHTML = '';
 
             productos.forEach(p => {
-                // Normalización de datos (Mayúsculas/Minúsculas)
-                const tipo = (p.Tipo || p.tipo || "").toLowerCase();
-                const sub = (p.Subcategoria || p.subcategoria || p.Sub || "").toLowerCase();
-                const titulo = p.Titulo || p.titulo || "Producto Artemisa";
-                const precio = p.Precio || p.precio || "Consultar";
-                const precioAnt = p.PrecioAnterior || p.precioAnterior || p.previo || null;
-                const desc = p.Descripcion || p.descripcion || "";
-                const img = p.ImagenURL || p.imagenURL || p.url || "";
-                const stock = parseInt(p.Stock || p.stock) || 0;
-                const local = p.Local || p.local || "Artemisa - El Pangui";
+                // Normalización de menús desplegables (Mayúsculas/Minúsculas)
+                const tipoRaw = (p.Tipo || p.tipo || "").toLowerCase();
+                const subRaw = (p.Subcategoria || p.subcategoria || p.Sub || "").toLowerCase();
+                
+                // Clasificación inteligente para menús desplegables
+                const esServicio = tipoRaw.includes('servicio');
+                const catPrincipal = esServicio ? 'servicio' : 'tienda';
 
-                const esServicio = tipo.includes('servicio');
-                const agotado = !esServicio && stock <= 0;
+                const titulo = p.Titulo || p.titulo || "Sin Título";
+                const precio = p.Precio || p.precio || "Consultar";
+                const stockCount = parseInt(p.Stock || p.stock) || 0;
+                const agotado = !esServicio && stockCount <= 0;
+
                 const esCotizar = /cotizar|definir|acordar/i.test(precio);
-                const precioFinal = esCotizar ? precio : `$${precio}`;
+                const precioTexto = esCotizar ? precio : (precio.toString().includes('$') ? precio : `$${precio}`);
 
                 grid.innerHTML += `
-                    <div class="card" data-tipo="${tipo}" data-sub="${sub}">
-                        ${img ? `<img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
+                    <div class="card" data-tipo="${catPrincipal}" data-sub="${subRaw}" style="display:flex">
+                        ${p.ImagenURL || p.imagenURL ? `<img src="${p.ImagenURL || p.imagenURL}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
                         <div class="card-content">
                             <div class="tag-row">
-                                <span class="tag">${sub.toUpperCase()}</span>
-                                ${!esServicio ? (agotado ? `<span class="stock-tag stock-out">🚫 Agotado</span>` : `<span class="stock-tag">📦 Stock: ${stock}</span>`) : ''}
+                                <span class="tag">${subRaw.toUpperCase()}</span>
+                                ${!esServicio ? (agotado ? `<span class="stock-tag stock-out">🚫 Agotado</span>` : `<span class="stock-tag">📦 Stock: ${stockCount}</span>`) : ''}
                             </div>
                             <h3>${titulo}</h3>
-                            <p>${desc}</p>
-                            <p style="font-size:0.8rem; color:#888;">📍 ${local}</p>
+                            <p>${p.Descripcion || p.descripcion || ""}</p>
+                            <p class="local-info">📍 ${p.Local || p.local || "Artemisa - El Pangui"}</p>
                             <div class="price-tag">
-                                ${precioAnt ? `<span class="old-price">$${precioAnt}</span>` : ''} ${precioFinal}
+                                ${p.PrecioAnterior || p.precioAnterior ? `<span class="old-price">$${p.PrecioAnterior || p.precioAnterior}</span>` : ''} ${precioTexto}
                             </div>
                             <button class="btn-wa" ${agotado ? 'disabled' : ''} onclick="comprar('${titulo}')">
-                                ${agotado ? 'AGOTADO' : (esCotizar ? 'COTIZAR AHORA' : 'ADQUIRIR AHORA')}
+                                ${agotado ? "PRODUCTO AGOTADO" : (esCotizar ? "SOLICITAR COTIZACIÓN" : "ADQUIRIR AHORA")}
                             </button>
                         </div>
                     </div>`;
             });
             ui('todos', document.querySelector('.btn-main'));
         } catch (e) {
-            console.error("Error Artemisa:", e);
-            document.getElementById('catalogo').innerHTML = "<p style='text-align:center;'>Error de conexión. Por favor, refresque la página o verifique su conexión en El Pangui.</p>";
+            console.error("Error en sincronización:", e);
+            document.getElementById('catalogo').innerHTML = "<p style='text-align:center;'>Error de conexión con la nube de Artemisa. Por favor, refresque la página.</p>";
         }
     }
 
     function comprar(titulo) {
-        const msg = `Hola Artemisa, me interesa el producto/servicio: *${titulo}*`;
-        // Descontar stock silenciosamente antes de redirigir
+        const msgWa = `Hola Artemisa, me interesa: *${titulo}*`;
+        // Reta el stock en la hoja de cálculo antes de redirigir
         fetch(`${API_URL}?vender=${encodeURIComponent(titulo)}`).finally(() => {
-            window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(msgWa)}`, '_blank');
         });
     }
 
@@ -147,6 +158,7 @@
         document.querySelectorAll('.card').forEach(card => {
             const t = card.dataset.tipo;
             const s = card.dataset.sub;
+            // Búsqueda por inclusión para manejar menús desplegables compuestos
             const mostrar = (criterio === 'todos' || t.includes(criterio) || s.includes(criterio));
             card.style.display = mostrar ? 'flex' : 'none';
         });
