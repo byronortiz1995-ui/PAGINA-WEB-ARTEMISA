@@ -3,42 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARTEMISA | Plataforma Dinámica de Servicios & Comercio</title>
+    <title>ARTEMISA | Catálogo Dinámico</title>
     <style>
-        :root { --gold: #d4af37; --black: #121212; --green: #25d366; --gray: #f4f4f9; --dark-gray: #333; }
+        :root { --gold: #d4af37; --black: #121212; --green: #25d366; --gray: #f4f4f9; --dark-gray: #333; --red: #e74c3c; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--gray); margin: 0; color: var(--dark-gray); }
-        
         header { background: var(--black); color: var(--gold); padding: 3rem 1rem; text-align: center; border-bottom: 5px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         header h1 { margin: 0; font-size: 3rem; letter-spacing: 4px; }
         header p { margin: 10px 0 0; font-weight: 300; color: #fff; font-size: 1.1rem; }
-
         .container { max-width: 1200px; margin: auto; padding: 20px; }
-
-        /* NAVEGACIÓN */
         .nav-main { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
         .btn-main { background: var(--black); color: white; border: 2px solid var(--black); padding: 12px 25px; cursor: pointer; border-radius: 30px; font-weight: bold; transition: 0.3s; }
-        .btn-main.active { background: var(--gold); color: var(--black); border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-
+        .btn-main.active { background: var(--gold); color: var(--black); border-color: var(--gold); }
         .nav-sub { display: none; justify-content: center; gap: 10px; margin-bottom: 30px; background: #e0e0e0; padding: 15px; border-radius: 15px; flex-wrap: wrap; }
         .btn-sub { background: #666; font-size: 0.85rem; border: none; padding: 10px 20px; color: white; cursor: pointer; border-radius: 20px; transition: 0.3s; font-weight: bold; }
         .btn-sub.active { background: var(--gold); color: var(--black); }
-
-        /* GRID Y TARJETAS */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; min-height: 200px; }
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; display: none; border: 1px solid #eee; flex-direction: column; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; display: flex; border: 1px solid #eee; flex-direction: column; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
         .card-img { width: 100%; height: 200px; object-fit: cover; background: #ddd; }
         .card-content { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
-        
         .tag-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .tag { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; background: #eee; padding: 5px 10px; border-radius: 5px; color: #666; }
         .stock-tag { font-size: 0.75rem; font-weight: bold; color: #27ae60; }
-        .stock-out { color: #e74c3c; }
-
-        .local-info { font-size: 0.8rem; color: #888; margin-bottom: 15px; font-style: italic; }
+        .stock-out { color: var(--red); }
         .price-tag { font-size: 1.4rem; font-weight: bold; color: var(--black); margin-bottom: 15px; background: #fafafa; padding: 10px; border-radius: 8px; text-align: center; border: 1px dashed #ccc; }
         .old-price { font-size: 1rem; color: #999; text-decoration: line-through; margin-right: 10px; font-weight: normal; }
-
         .btn-wa { display: block; width: 100%; background: var(--green); color: white; text-align: center; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; transition: 0.3s; }
         .btn-wa:disabled { background: #bbb; cursor: not-allowed; }
     </style>
@@ -54,7 +43,7 @@
     <div class="nav-main">
         <button class="btn-main active" onclick="ui('todos', this)">VER TODO</button>
         <button class="btn-main" onclick="ui('servicio', this)">SERVICIOS</button>
-        <button class="btn-main" onclick="tienda(this)">TIENDA LOCAL</button>
+        <button class="btn-main" onclick="ui('tienda', this)">TIENDA LOCAL</button>
     </div>
 
     <div id="sub-servicio" class="nav-sub">
@@ -66,92 +55,83 @@
 
     <div id="sub-tienda" class="nav-sub">
         <button class="btn-sub" onclick="filtrar('ferreteria', this)">Ferretería</button>
-        <button class="btn-sub" onclick="filtrar('accesorios', this)">Accesorios</button>
+        <button class="btn-sub" onclick="filtrar('accesorios', this) ">Accesorios</button>
         <button class="btn-sub" onclick="filtrar('promo', this)">🔥 Ofertas</button>
     </div>
 
     <div class="grid" id="catalogo">
-        <p style="text-align:center; width:100%;">Sincronizando con la nube de Artemisa...</p>
+        <p style="text-align:center; width:100%;">Conectando con la nube en Zamora...</p>
     </div>
 </div>
 
 <script>
     const TEL = "593939344200";
-    
-    // REEMPLAZA ESTA URL POR LA DE TU NUEVA IMPLEMENTACIÓN (LA QUE TERMINA EN /exec)
     const API_URL = "https://script.google.com/macros/s/AKfycbzKn_Cztd-GiMnvlTe7aGruTJ0CpMqXqm59RQ3Am8swFQolEJ7RBv5C9HTmjDs6HrhAVQ/exec";
 
     async function cargarCatalogo() {
         try {
             const res = await fetch(API_URL);
+            if (!res.ok) throw new Error("Respuesta de red no válida");
             const productos = await res.json();
             
             const grid = document.getElementById('catalogo');
             grid.innerHTML = '';
 
             productos.forEach(p => {
-                // Identificamos si es servicio o producto
-                const esServicio = p.Tipo.toLowerCase() === 'servicio';
-                const stockCount = parseInt(p.Stock) || 0;
-                const agotado = !esServicio && stockCount <= 0;
+                // Normalización de datos (Mayúsculas/Minúsculas)
+                const tipo = (p.Tipo || p.tipo || "").toLowerCase();
+                const sub = (p.Subcategoria || p.subcategoria || p.Sub || "").toLowerCase();
+                const titulo = p.Titulo || p.titulo || "Producto Artemisa";
+                const precio = p.Precio || p.precio || "Consultar";
+                const precioAnt = p.PrecioAnterior || p.precioAnterior || p.previo || null;
+                const desc = p.Descripcion || p.descripcion || "";
+                const img = p.ImagenURL || p.imagenURL || p.url || "";
+                const stock = parseInt(p.Stock || p.stock) || 0;
+                const local = p.Local || p.local || "Artemisa - El Pangui";
 
-                const esCotizar = /cotizar|definir|acordar/i.test(p.Precio);
-                const textoPrecio = esCotizar ? p.Precio : `$${p.Precio}`;
-                const textoBoton = agotado ? "PRODUCTO AGOTADO" : (p.BtnText || (esCotizar ? "SOLICITAR COTIZACIÓN" : "ADQUIRIR AHORA"));
-                const msgWa = p.CustomMsg || `Hola Artemisa, me interesa: *${p.Titulo}*`;
-
-                // Generar etiqueta de stock solo para productos
-                let stockHTML = '';
-                if (!esServicio) {
-                    stockHTML = agotado 
-                        ? `<span class="stock-tag stock-out">🚫 Agotado</span>` 
-                        : `<span class="stock-tag">📦 Stock: ${stockCount}</span>`;
-                }
+                const esServicio = tipo.includes('servicio');
+                const agotado = !esServicio && stock <= 0;
+                const esCotizar = /cotizar|definir|acordar/i.test(precio);
+                const precioFinal = esCotizar ? precio : `$${precio}`;
 
                 grid.innerHTML += `
-                    <div class="card" data-tipo="${p.Tipo.toLowerCase()}" data-sub="${p.Subcategoria.toLowerCase()}" style="display:flex">
-                        ${p.ImagenURL ? `<img src="${p.ImagenURL}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
+                    <div class="card" data-tipo="${tipo}" data-sub="${sub}">
+                        ${img ? `<img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
                         <div class="card-content">
                             <div class="tag-row">
-                                <span class="tag">${p.Subcategoria.toUpperCase()}</span>
-                                ${stockHTML}
+                                <span class="tag">${sub.toUpperCase()}</span>
+                                ${!esServicio ? (agotado ? `<span class="stock-tag stock-out">🚫 Agotado</span>` : `<span class="stock-tag">📦 Stock: ${stock}</span>`) : ''}
                             </div>
-                            <h3>${p.Titulo}</h3>
-                            <p>${p.Descripcion}</p>
-                            ${p.Local ? `<p class="local-info">📍 Proveedor: ${p.Local}</p>` : ''}
+                            <h3>${titulo}</h3>
+                            <p>${desc}</p>
+                            <p style="font-size:0.8rem; color:#888;">📍 ${local}</p>
                             <div class="price-tag">
-                                ${p.PrecioAnterior ? `<span class="old-price">$${p.PrecioAnterior}</span>` : ''} ${textoPrecio}
+                                ${precioAnt ? `<span class="old-price">$${precioAnt}</span>` : ''} ${precioFinal}
                             </div>
-                            <button class="btn-wa" ${agotado ? 'disabled' : ''} onclick="comprar('${p.Titulo}', '${msgWa}')">
-                                ${textoBoton}
+                            <button class="btn-wa" ${agotado ? 'disabled' : ''} onclick="comprar('${titulo}')">
+                                ${agotado ? 'AGOTADO' : (esCotizar ? 'COTIZAR AHORA' : 'ADQUIRIR AHORA')}
                             </button>
                         </div>
                     </div>`;
             });
             ui('todos', document.querySelector('.btn-main'));
         } catch (e) {
-            console.error("Error en sincronización:", e);
-            document.getElementById('catalogo').innerHTML = "<p>Error de conexión con la nube de Artemisa. Por favor, refresque la página.</p>";
+            console.error("Error Artemisa:", e);
+            document.getElementById('catalogo').innerHTML = "<p style='text-align:center;'>Error de conexión. Por favor, refresque la página o verifique su conexión en El Pangui.</p>";
         }
     }
 
-    // Función artesanal para descontar stock y abrir WhatsApp
-    function comprar(titulo, mensaje) {
-        // Notificamos a la API para que reste el stock en la hoja de cálculo
-        fetch(`${API_URL}?vender=${encodeURIComponent(titulo)}`)
-            .then(() => {
-                window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(mensaje)}`, '_blank');
-            })
-            .catch(err => {
-                console.error("Error al procesar stock, abriendo WhatsApp de todos modos...", err);
-                window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(mensaje)}`, '_blank');
-            });
+    function comprar(titulo) {
+        const msg = `Hola Artemisa, me interesa el producto/servicio: *${titulo}*`;
+        // Descontar stock silenciosamente antes de redirigir
+        fetch(`${API_URL}?vender=${encodeURIComponent(titulo)}`).finally(() => {
+            window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(msg)}`, '_blank');
+        });
     }
 
     function ui(tipo, btn) {
         document.querySelectorAll('.btn-main').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        document.querySelectorAll('.btn-sub').forEach(b => b.classList.remove('active'));
         
         document.getElementById('sub-servicio').style.display = (tipo === 'servicio') ? 'flex' : 'none';
         document.getElementById('sub-tienda').style.display = (tipo === 'tienda') ? 'flex' : 'none';
@@ -159,16 +139,16 @@
         filtrar(tipo, null);
     }
 
-    function tienda(btn) { ui('tienda', btn); }
-
     function filtrar(criterio, btn) {
         if(btn) {
             document.querySelectorAll('.btn-sub').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
         document.querySelectorAll('.card').forEach(card => {
-            const m = (criterio === 'todos' || card.dataset.tipo === criterio || card.dataset.sub === criterio);
-            card.style.display = m ? 'flex' : 'none';
+            const t = card.dataset.tipo;
+            const s = card.dataset.sub;
+            const mostrar = (criterio === 'todos' || t.includes(criterio) || s.includes(criterio));
+            card.style.display = mostrar ? 'flex' : 'none';
         });
     }
 
