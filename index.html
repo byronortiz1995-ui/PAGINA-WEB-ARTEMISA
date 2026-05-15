@@ -134,18 +134,13 @@
     </div>
 
     <div class="nav-tabs">
-        <button class="tab-btn ofertas" id="btn-ofertas" onclick="filter('ofertas', this)">🔥 Ofertas</button>
-        <button class="tab-btn" id="btn-servicios" onclick="filter('servicios', this)">🛠️ Servicios</button>
+        <button class="tab-btn active" id="btn-servicios" onclick="filter('servicios', this)">🛠️ Servicios</button>
         <button class="tab-btn" id="btn-tienda" onclick="filter('tienda', this)">🛒 Tienda</button>
+        <button class="tab-btn ofertas" id="btn-ofertas" onclick="filter('ofertas', this)">🔥 Ofertas</button>
     </div>
 
     <div class="container">
         <div id="loading-msg" style="color:var(--black); text-align:center; padding: 40px;">Cargando información...</div>
-
-        <div id="section-ofertas" class="catalog-section" style="display:none;">
-            <h2 class="section-title">🔥 Ofertas Especiales</h2>
-            <div class="grid" id="grid-ofertas"></div>
-        </div>
 
         <div id="section-servicios" class="catalog-section" style="display:none;">
             <h2 class="section-title">🛠️ Nuestros Servicios</h2>
@@ -155,6 +150,11 @@
         <div id="section-tienda" class="catalog-section" style="display:none;">
             <h2 class="section-title">🛒 Tienda de Productos</h2>
             <div class="grid" id="grid-tienda"></div>
+        </div>
+
+        <div id="section-ofertas" class="catalog-section" style="display:none;">
+            <h2 class="section-title">🔥 Ofertas Especiales</h2>
+            <div class="grid" id="grid-ofertas"></div>
         </div>
     </div>
 </div>
@@ -180,9 +180,9 @@
     }
 
     async function fetchData() {
-        const gridOfertas = document.getElementById('grid-ofertas');
         const gridServicios = document.getElementById('grid-servicios');
         const gridTienda = document.getElementById('grid-tienda');
+        const gridOfertas = document.getElementById('grid-ofertas');
         const loadingMsg = document.getElementById('loading-msg');
         
         const hoy = new Date(); 
@@ -191,14 +191,14 @@
             const res = await fetch(API_URL);
             const data = await res.json();
             
-            gridOfertas.innerHTML = '';
             gridServicios.innerHTML = '';
             gridTienda.innerHTML = '';
+            gridOfertas.innerHTML = '';
             loadingMsg.style.display = 'none';
 
-            let hasOfertas = false;
             let hasServicios = false;
             let hasTienda = false;
+            let hasOfertas = false;
 
             data.forEach(item => {
                 const title = getVal(item, ["titulo", "nombre"]);
@@ -218,6 +218,7 @@
                 let precioFinal = precioBase;
                 let enPromocion = false;
 
+                // Verificación de promociones por temporada
                 if (inicioPromo && finPromo) {
                     const dInicio = new Date(inicioPromo);
                     const dFin = new Date(finPromo);
@@ -252,6 +253,7 @@
                         </div>
                     </div>`;
 
+                // Clasificación estricta: Si está en promoción, VA A OFERTAS
                 if (enPromocion) {
                     gridOfertas.innerHTML += cardHTML;
                     hasOfertas = true;
@@ -264,13 +266,13 @@
                 }
             });
 
-            // Lógica para auto-seleccionar la pestaña correcta al cargar
-            if (hasOfertas) {
-                filter('ofertas', document.getElementById('btn-ofertas'));
-            } else if (hasServicios) {
+            // Lógica para auto-seleccionar la pestaña correcta al cargar (Prioridad: Servicios -> Tienda -> Ofertas)
+            if (hasServicios) {
                 filter('servicios', document.getElementById('btn-servicios'));
-            } else {
+            } else if (hasTienda) {
                 filter('tienda', document.getElementById('btn-tienda'));
+            } else if (hasOfertas) {
+                filter('ofertas', document.getElementById('btn-ofertas'));
             }
 
         } catch (e) {
@@ -279,26 +281,23 @@
     }
 
     function filter(cat, btn) {
+        // Remover clase 'active' de todos los botones y agregar al seleccionado
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        const secOfertas = document.getElementById('section-ofertas');
         const secServicios = document.getElementById('section-servicios');
         const secTienda = document.getElementById('section-tienda');
+        const secOfertas = document.getElementById('section-ofertas');
 
-        const gridOfertas = document.getElementById('grid-ofertas');
-        const gridServicios = document.getElementById('grid-servicios');
-        const gridTienda = document.getElementById('grid-tienda');
-
-        // Primero ocultamos todas las secciones
-        secOfertas.style.display = 'none';
+        // Ocultar todas las secciones primero
         secServicios.style.display = 'none';
         secTienda.style.display = 'none';
+        secOfertas.style.display = 'none';
 
-        // Mostramos solo la sección seleccionada si tiene contenido
-        if (cat === 'ofertas' && gridOfertas.innerHTML.trim() !== '') secOfertas.style.display = 'block';
-        if (cat === 'servicios' && gridServicios.innerHTML.trim() !== '') secServicios.style.display = 'block';
-        if (cat === 'tienda' && gridTienda.innerHTML.trim() !== '') secTienda.style.display = 'block';
+        // Mostrar exclusivamente la que se seleccionó
+        if (cat === 'servicios' && document.getElementById('grid-servicios').innerHTML.trim() !== '') secServicios.style.display = 'block';
+        if (cat === 'tienda' && document.getElementById('grid-tienda').innerHTML.trim() !== '') secTienda.style.display = 'block';
+        if (cat === 'ofertas' && document.getElementById('grid-ofertas').innerHTML.trim() !== '') secOfertas.style.display = 'block';
     }
 </script>
 </body>
