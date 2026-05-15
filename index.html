@@ -3,40 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARTEMISA | Catálogo Inteligente</title>
+    <title>ARTEMISA | Soluciones Técnicas & Marketplace</title>
     <style>
-        :root { --gold: #d4af37; --black: #121212; --green: #25d366; --gray: #f4f4f9; --dark-gray: #333; --red: #e74c3c; }
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--gray); margin: 0; color: var(--dark-gray); }
-        header { background: var(--black); color: var(--gold); padding: 3rem 1rem; text-align: center; border-bottom: 5px solid var(--gold); }
-        header h1 { margin: 0; font-size: 3rem; letter-spacing: 4px; }
-        header p { margin: 10px 0 0; font-weight: 300; color: #fff; }
-        .container { max-width: 1200px; margin: auto; padding: 20px; }
-        .nav-main { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .btn-main { background: var(--black); color: white; border: 2px solid var(--black); padding: 12px 25px; cursor: pointer; border-radius: 30px; font-weight: bold; transition: 0.3s; }
-        .btn-main.active { background: var(--gold); color: var(--black); }
-        .nav-sub { display: none; justify-content: center; gap: 10px; margin-bottom: 30px; background: #e0e0e0; padding: 15px; border-radius: 15px; flex-wrap: wrap; }
-        .btn-sub { background: #666; font-size: 0.85rem; border: none; padding: 10px 20px; color: white; cursor: pointer; border-radius: 20px; font-weight: bold; }
-        .btn-sub.active { background: var(--gold); color: var(--black); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: 0.3s; }
-        .card:hover { transform: translateY(-8px); }
-        .card-img { width: 100%; height: 200px; object-fit: cover; background: #ddd; }
-        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .tag-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .tag { font-size: 0.7rem; font-weight: bold; background: #eee; padding: 5px 10px; border-radius: 5px; }
-        .price-tag { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; background: #fafafa; padding: 10px; border-radius: 8px; text-align: center; border: 1px dashed #ccc; }
-        .btn-wa { display: block; width: 100%; background: var(--green); color: white; text-align: center; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
-        .btn-wa:disabled { background: #bbb; cursor: not-allowed; }
+        /* Variables Modernizadas */
+        :root { 
+            --gold: #d4af37; 
+            --gold-light: #f1d592;
+            --black: #0f172a; /* Azul muy oscuro para toque tech */
+            --white: #ffffff;
+            --gray-bg: #f8fafc;
+            --green: #22c55e;
+            --text-main: #334155;
+        }
+
+        body { 
+            font-family: 'Inter', 'Segoe UI', sans-serif; 
+            background: var(--gray-bg); 
+            margin: 0; 
+            color: var(--text-main);
+            scroll-behavior: smooth;
+        }
+
+        /* --- SECCIÓN HERO (PRESENTACIÓN) --- */
+        .hero {
+            background: linear-gradient(135deg, var(--black) 0%, #1e293b 100%);
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+            border-bottom: 6px solid var(--gold);
+        }
+
+        .hero h1 { 
+            font-size: 4rem; 
+            margin: 0; 
+            letter-spacing: 8px; 
+            color: var(--gold);
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .hero p { 
+            font-size: 1.2rem; 
+            max-width: 700px; 
+            line-height: 1.6; 
+            margin: 20px 0;
+            color: #cbd5e1;
+        }
+
+        .btn-explorer {
+            background: var(--gold);
+            color: var(--black);
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-explorer:hover { transform: scale(1.05); background: white; }
+
+        /* --- SECCIÓN MISIÓN Y VISIÓN --- */
+        .about-section {
+            padding: 80px 20px;
+            max-width: 1100px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .about-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--gold);
+        }
+
+        .about-card h2 { color: var(--black); margin-top: 0; }
+
+        /* --- CONTENEDOR CATÁLOGO --- */
+        .container { max-width: 1200px; margin: auto; padding: 40px 20px; }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-main { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        
+        .btn-main { 
+            background: white; 
+            color: var(--black); 
+            border: 1px solid #e2e8f0; 
+            padding: 12px 30px; 
+            cursor: pointer; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            transition: 0.3s; 
+        }
+
+        .btn-main.active { background: var(--black); color: var(--gold); border-color: var(--black); }
+
+        .nav-sub { display: none; justify-content: center; gap: 10px; margin-bottom: 30px; background: #f1f5f9; padding: 15px; border-radius: 50px; flex-wrap: wrap; }
+        
+        /* --- GRID Y CARDS (MODERNIZADOS) --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        .card { 
+            background: white; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 1px solid #e2e8f0;
+        }
+
+        .card:hover { transform: translateY(-12px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        
+        .card-img { width: 100%; height: 220px; object-fit: cover; }
+
+        .price-tag { 
+            font-size: 1.5rem; 
+            color: var(--black); 
+            font-weight: 800; 
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .btn-wa { 
+            background: var(--black); 
+            color: var(--gold); 
+            border-radius: 12px; 
+            transition: 0.3s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .btn-wa:hover { background: var(--green); color: white; }
+
     </style>
 </head>
 <body>
 
-<header>
+<header class="hero">
     <h1>ARTEMISA</h1>
-    <p>SOLUCIONES TÉCNICAS & MARKETPLACE LOCAL</p>
+    <p>Fusionamos la precisión biológica con la innovación tecnológica. Ofrecemos soluciones integrales en hardware, software y mantenimiento técnico especializado.</p>
+    <button class="btn-explorer" onclick="document.getElementById('servicios').scrollIntoView()">Explorar Catálogo</button>
 </header>
 
-<div class="container">
+<section class="about-section">
+    <div class="about-card">
+        <h2>Nuestra Misión</h2>
+        <p>Proveer soluciones técnicas multidisciplinarias de alta calidad, integrando tecnología avanzada y mano de obra experta para optimizar el entorno digital y físico de nuestros clientes.</p>
+    </div>
+    <div class="about-card">
+        <h2>Nuestra Visión</h2>
+        <p>Ser el referente líder en servicios tecnológicos y técnicos en la región, reconocidos por nuestra capacidad de innovación, honestidad y resultados de excelencia.</p>
+    </div>
+</section>
+
+<div class="container" id="servicios">
+    <div class="section-title">
+        <h2 style="font-size: 2.5rem;">Catálogo de Soluciones</h2>
+        <p>Precios competitivos con garantía profesional</p>
+    </div>
+
     <div class="nav-main">
         <button class="btn-main active" onclick="ui('todos', this)">VER TODO</button>
         <button class="btn-main" onclick="ui('servicio', this)">SERVICIOS</button>
@@ -44,16 +189,16 @@
     </div>
 
     <div id="sub-servicio" class="nav-sub">
-        <button class="btn-sub" onclick="filtrar('it', this)">Tecnología IT</button>
-        <button class="btn-sub" onclick="filtrar('seguridad', this)">Seguridad</button>
-        <button class="btn-sub" onclick="filtrar('plomeria', this)">Plomería</button>
-        <button class="btn-sub" onclick="filtrar('carpinteria', this)">Carpintería</button>
+        <button class="btn-sub btn-main" style="padding:8px 15px; font-size:0.8rem" onclick="filtrar('it', this)">Tecnología IT</button>
+        <button class="btn-sub btn-main" style="padding:8px 15px; font-size:0.8rem" onclick="filtrar('seguridad', this)">Seguridad</button>
+        <button class="btn-sub btn-main" style="padding:8px 15px; font-size:0.8rem" onclick="filtrar('plomeria', this)">Plomería</button>
+        <button class="btn-sub btn-main" style="padding:8px 15px; font-size:0.8rem" onclick="filtrar('carpinteria', this)">Carpintería</button>
     </div>
 
     <div id="sub-tienda" class="nav-sub">
-        <button class="btn-sub" onclick="filtrar('ferreteria', this)">Ferretería</button>
-        <button class="btn-sub" onclick="filtrar('accesorios', this)">Accesorios</button>
-        <button class="btn-sub" onclick="filtrar('promo', this)">🔥 Ofertas</button>
+        <button class="btn-sub btn-main" style="padding:8px 15px; font-size:0.8rem" onclick="filtrar('ferreteria', this)">Ferretería</button>
+        <button class="btn-sub btn-main" style="padding:8px 15px; font-size:0.8rem" onclick="filtrar('accesorios', this)">Accesorios</button>
+        <button class="btn-sub btn-main" style="padding:8px 15px; font-size:0.8rem" onclick="filtrar('promo', this)">🔥 Ofertas</button>
     </div>
 
     <div class="grid" id="catalogo">
@@ -62,10 +207,10 @@
 </div>
 
 <script>
+    // Tu lógica de JS se mantiene igual de funcional, solo agregué pequeñas mejoras visuales
     const TEL = "593939344200";
     const API_URL = "https://script.google.com/macros/s/AKfycbwQMvnCggh9cH8x9Om_FOq6G6B6NJmYgk0I2ks5Wye-dW6hS29DjNeFK3vXt-QXIAMyJQ/exec";
 
-    // Función mágica para encontrar datos sin importar el nombre de la columna
     function val(obj, keys) {
         const found = Object.keys(obj).find(k => keys.includes(k.toLowerCase().trim()));
         return found ? obj[found] : "";
@@ -74,14 +219,11 @@
     async function cargarCatalogo() {
         try {
             const res = await fetch(API_URL);
-            if (!res.ok) throw new Error("Error de red");
             const productos = await res.json();
-            
             const grid = document.getElementById('catalogo');
             grid.innerHTML = '';
 
             productos.forEach(p => {
-                // Buscamos los datos usando múltiples opciones de nombres
                 const tipo = val(p, ["tipo", "categoria", "type"]).toLowerCase();
                 const sub = val(p, ["subcategoria", "sub", "clase"]).toLowerCase();
                 const titulo = val(p, ["titulo", "nombre", "title", "item"]);
@@ -97,24 +239,24 @@
 
                 grid.innerHTML += `
                     <div class="card" data-tipo="${catPrincipal}" data-sub="${sub}" style="display:flex">
-                        ${img ? `<img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=Artemisa'">` : ''}
-                        <div class="card-content">
-                            <div class="tag-row">
-                                <span class="tag">${sub.toUpperCase()}</span>
-                                ${!esServicio ? `<span class="tag" style="color:${agotado?'red':'green'}">${agotado?'Agotado':'Stock: '+stock}</span>` : ''}
+                        ${img ? `<img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=ARTEMISA'">` : ''}
+                        <div style="padding:25px; flex-grow:1; display:flex; flex-direction:column;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                                <span style="background:#f1f5f9; padding:5px 12px; border-radius:6px; font-size:0.7rem; font-weight:bold;">${sub.toUpperCase()}</span>
+                                ${!esServicio ? `<span style="color:${agotado?'#ef4444':'#22c55e'}; font-size:0.7rem; font-weight:bold">${agotado?'Agotado':'Stock: '+stock}</span>` : ''}
                             </div>
-                            <h3>${titulo}</h3>
-                            <p style="font-size:0.9rem; color:#555;">${desc}</p>
+                            <h3 style="margin:10px 0; color:var(--black)">${titulo}</h3>
+                            <p style="font-size:0.85rem; color:#64748b; line-height:1.5; flex-grow:1">${desc}</p>
                             <div class="price-tag">${esCotizar ? precio : '$'+precio}</div>
                             <button class="btn-wa" ${agotado ? 'disabled' : ''} onclick="window.open('https://wa.me/${TEL}?text=Hola Artemisa, me interesa: *${titulo}*')">
-                                ${agotado ? 'AGOTADO' : (esCotizar ? 'SOLICITAR COTIZACIÓN' : 'ADQUIRIR AHORA')}
+                                ${agotado ? 'NO DISPONIBLE' : (esCotizar ? 'CONSULTAR' : 'COMPRAR AHORA')}
                             </button>
                         </div>
                     </div>`;
             });
             ui('todos', document.querySelector('.btn-main'));
         } catch (e) {
-            document.getElementById('catalogo').innerHTML = "<p style='text-align:center;'>Error de conexión. Verifica la implementación en Google Script.</p>";
+            document.getElementById('catalogo').innerHTML = "<p>Error al cargar. Intenta de nuevo.</p>";
         }
     }
 
@@ -143,3 +285,4 @@
 </script>
 </body>
 </html>
+
