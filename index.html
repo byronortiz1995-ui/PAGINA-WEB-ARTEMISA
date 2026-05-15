@@ -29,7 +29,6 @@
         .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; letter-spacing: 4px; color: var(--gold); margin: 0; }
         .hero p.intro { max-width: 650px; margin: 20px 0 35px; font-size: 1.1rem; color: #e2e8f0; line-height: 1.6; }
 
-        /* Misión y Visión */
         .identity-container {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px; max-width: 900px; margin-bottom: 40px;
@@ -51,7 +50,7 @@
         .btn-cta:hover { transform: scale(1.05); background: var(--white); }
 
         /* --- CATALOG SECTION --- */
-        #view-catalog { background: var(--gray-bg); color: var(--black); }
+        #view-catalog { background: var(--gray-bg); color: var(--black); position: relative; }
 
         .app-bar { 
             background: var(--black); color: white; padding: 15px 20px; 
@@ -67,14 +66,12 @@
 
         .container { max-width: 1200px; margin: auto; padding: 20px; }
         
-        /* Títulos de Sección */
         .section-title {
             font-size: 1.8rem; font-weight: 900; color: var(--black);
             margin: 40px 0 20px 0; border-bottom: 3px solid var(--gold);
             display: inline-block; padding-bottom: 5px;
         }
         .catalog-section { margin-bottom: 50px; }
-
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
         /* Product Cards */
@@ -92,16 +89,90 @@
         .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
         
         .stock-tag { font-size: 0.7rem; font-weight: 900; margin-bottom: 8px; text-transform: uppercase; }
-        .price-box { margin: 15px 0; text-align: center; background: #f8fafc; padding: 12px; border-radius: 12px; }
+        
+        /* Ajuste de descripción larga */
+        .desc-preview {
+            font-size: 0.85rem; color: #64748b; line-height: 1.4; margin-bottom: 15px;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        .btn-specs {
+            background: transparent; border: 1px solid var(--slate-200); color: var(--black);
+            padding: 8px; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%;
+            margin-bottom: 15px; transition: 0.2s; font-size: 0.85rem;
+        }
+        .btn-specs:hover { border-color: var(--gold); color: var(--gold); }
+
+        .price-box { margin-bottom: 15px; text-align: center; background: #f8fafc; padding: 12px; border-radius: 12px; margin-top: auto;}
         .old-price { text-decoration: line-through; color: #94a3b8; font-size: 0.9rem; margin-right: 8px; }
         .current-price { font-size: 1.8rem; font-weight: 900; color: var(--black); }
 
-        .btn-wa { 
+        .btn-add { 
             background: var(--black); color: var(--gold); padding: 16px; 
             border-radius: 12px; font-weight: 800; border: none; cursor: pointer; width: 100%; transition: 0.3s;
         }
-        .btn-wa:hover:not(:disabled) { background: var(--green); color: white; }
-        .btn-wa:disabled { background: #cbd5e1; color: white; cursor: not-allowed; }
+        .btn-add:hover:not(:disabled) { background: var(--gold); color: var(--black); }
+        .btn-add:disabled { background: #cbd5e1; color: white; cursor: not-allowed; }
+
+        /* --- MODAL ESPECIFICACIONES --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); z-index: 2000; align-items: center; justify-content: center;
+            padding: 20px; box-sizing: border-box; backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: white; border-radius: 15px; max-width: 800px; width: 100%;
+            max-height: 90vh; overflow-y: auto; display: flex; flex-wrap: wrap; position: relative; color: var(--black);
+        }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--black); z-index: 10;}
+        .modal-img-box { flex: 1; min-width: 300px; background: #f8fafc; }
+        .modal-img-box img { width: 100%; height: 100%; object-fit: contain; max-height: 400px;}
+        .modal-details { flex: 1; min-width: 300px; padding: 30px; display: flex; flex-direction: column;}
+        
+        .qty-controls { display: flex; align-items: center; gap: 15px; margin: 20px 0; }
+        .qty-btn { background: var(--slate-200); border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 1.2rem; cursor: pointer; font-weight: bold;}
+        .qty-input { width: 50px; text-align: center; font-size: 1.1rem; border: 1px solid var(--slate-200); border-radius: 8px; height: 35px; font-weight: bold;}
+
+        /* --- CARRITO FLOTANTE Y SIDEBAR --- */
+        .cart-floating-btn {
+            position: fixed; bottom: 30px; right: 30px; background: var(--green); color: white;
+            width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; cursor: pointer; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); z-index: 1000;
+            transition: 0.3s;
+        }
+        .cart-floating-btn:hover { transform: scale(1.1); }
+        .cart-badge {
+            position: absolute; top: 0; right: 0; background: var(--red); color: white;
+            font-size: 0.8rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .cart-sidebar {
+            position: fixed; right: -400px; top: 0; width: 350px; height: 100vh; max-width: 100%;
+            background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.2); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1500; display: flex; flex-direction: column; color: var(--black);
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.5); z-index: 1400; display: none;
+        }
+        .cart-overlay.open { display: block; }
+        
+        .cart-header { padding: 20px; border-bottom: 1px solid var(--slate-200); display: flex; justify-content: space-between; align-items: center;}
+        .cart-items-container { padding: 20px; flex-grow: 1; overflow-y: auto; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid var(--slate-200); padding-bottom: 15px; }
+        .cart-item-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 5px;}
+        .cart-item-price { color: var(--green); font-weight: 900; }
+        .cart-item-remove { color: var(--red); cursor: pointer; font-size: 0.8rem; font-weight: bold; border:none; background:none; padding:0;}
+        
+        .cart-footer { padding: 20px; border-top: 1px solid var(--slate-200); background: #f8fafc; }
+        .cart-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 900; margin-bottom: 15px;}
+        
+        .btn-checkout {
+            background: var(--green); color: white; padding: 16px; border-radius: 12px;
+            font-weight: 800; border: none; cursor: pointer; width: 100%; font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -140,7 +211,7 @@
     </div>
 
     <div class="container">
-        <div id="loading-msg" style="color:var(--black); text-align:center; padding: 40px;">Cargando información...</div>
+        <div id="loading-msg" style="color:var(--black); text-align:center; padding: 40px;">Cargando inventario de alta calidad...</div>
 
         <div id="section-servicios" class="catalog-section" style="display:none;">
             <h2 class="section-title">🛠️ Nuestros Servicios</h2>
@@ -157,16 +228,73 @@
             <div class="grid" id="grid-ofertas"></div>
         </div>
     </div>
+
+    <div class="cart-floating-btn" onclick="toggleCart()">
+        🛒
+        <div class="cart-badge" id="cart-badge-count">0</div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-specs">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">×</span>
+        <div class="modal-img-box">
+            <img id="m-img" src="" alt="Producto">
+        </div>
+        <div class="modal-details">
+            <div class="stock-tag" id="m-stock" style="color:var(--green)">Disponible</div>
+            <h2 id="m-title" style="margin: 5px 0 15px 0;">Título</h2>
+            
+            <div class="price-box" style="margin-top:0; text-align:left;">
+                <span id="m-old-price" class="old-price" style="display:none;"></span>
+                <span id="m-price" class="current-price"></span>
+            </div>
+
+            <p id="m-desc" style="font-size: 0.95rem; color: #475569; line-height: 1.6; white-space: pre-wrap; flex-grow: 1; margin-bottom: 20px;"></p>
+            
+            <div style="border-top: 1px solid var(--slate-200); padding-top: 15px;">
+                <label style="font-weight:bold; font-size:0.9rem;">Cantidad:</label>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+                    <input type="number" id="m-qty" class="qty-input" value="1" min="1" readonly>
+                    <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+                </div>
+                <button id="m-add-btn" class="btn-add" onclick="addModalToCart()">AGREGAR AL CARRITO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header">
+        <h3 style="margin:0;">🛒 Tu Pedido</h3>
+        <span style="font-size:1.5rem; cursor:pointer;" onclick="toggleCart()">×</span>
+    </div>
+    <div class="cart-items-container" id="cart-items">
+        <p style="text-align:center; color:#94a3b8; margin-top:50px;">El carrito está vacío</p>
+    </div>
+    <div class="cart-footer">
+        <div class="cart-total">
+            <span>Total Estimado:</span>
+            <span id="cart-total-price">$0.00</span>
+        </div>
+        <button class="btn-checkout" onclick="checkoutWA()">Enviar Pedido al WhatsApp</button>
+    </div>
 </div>
 
 <script>
     const TEL = "593939344200";
     const API_URL = "https://script.google.com/macros/s/AKfycbwQMvnCggh9cH8x9Om_FOq6G6B6NJmYgk0I2ks5Wye-dW6hS29DjNeFK3vXt-QXIAMyJQ/exec";
+    
+    let catalogData = []; // Guarda todos los datos traídos
+    let currentModalItemIndex = null;
+    let cart = []; // Array del carrito
 
     function showCatalog() {
         document.getElementById('view-home').classList.remove('active');
         document.getElementById('view-catalog').classList.add('active');
-        fetchData();
+        if(catalogData.length === 0) fetchData();
     }
 
     function showHome() {
@@ -180,45 +308,33 @@
     }
 
     async function fetchData() {
-        const gridServicios = document.getElementById('grid-servicios');
-        const gridTienda = document.getElementById('grid-tienda');
-        const gridOfertas = document.getElementById('grid-ofertas');
         const loadingMsg = document.getElementById('loading-msg');
-        
         const hoy = new Date(); 
 
         try {
             const res = await fetch(API_URL);
             const data = await res.json();
             
-            gridServicios.innerHTML = '';
-            gridTienda.innerHTML = '';
-            gridOfertas.innerHTML = '';
             loadingMsg.style.display = 'none';
-
-            let hasServicios = false;
-            let hasTienda = false;
-            let hasOfertas = false;
+            catalogData = []; // Reset
 
             data.forEach(item => {
                 const title = getVal(item, ["titulo", "nombre"]);
+                if(!title) return;
+
                 const desc = getVal(item, ["descripcion", "detalle"]);
                 const precioBase = parseFloat(getVal(item, ["precio", "valor"])) || 0;
-                
                 const dctoPorcentaje = parseFloat(getVal(item, ["descuento_porcentaje"])) || 0;
                 const motivo = getVal(item, ["motivo_descuento", "motivo"]);
                 const inicioPromo = getVal(item, ["promo_inicio"]);
                 const finPromo = getVal(item, ["promo_fin"]);
                 const stock = getVal(item, ["stock", "cantidad"]);
-                const img = getVal(item, ["imagenurl", "foto"]);
+                const img = getVal(item, ["imagenurl", "foto"]) || 'https://via.placeholder.com/400x300?text=ARTEMISA';
                 const type = (getVal(item, ["tipo", "categoria"]) || "").toLowerCase();
-
-                if(!title) return;
 
                 let precioFinal = precioBase;
                 let enPromocion = false;
 
-                // Verificación de promociones por temporada
                 if (inicioPromo && finPromo) {
                     const dInicio = new Date(inicioPromo);
                     const dFin = new Date(finPromo);
@@ -230,58 +346,67 @@
 
                 const isAgotado = stock !== "" && parseInt(stock) <= 0;
 
-                const cardHTML = `
-                    <div class="card">
-                        ${enPromocion ? `<div class="badge-promo">OFERTA -${dctoPorcentaje}%</div>` : ''}
-                        <img src="${img || 'https://via.placeholder.com/400x300?text=ARTEMISA'}" class="card-img" onerror="this.src='https://via.placeholder.com/400x300?text=ARTEMISA'">
-                        <div class="card-content">
-                            <div class="stock-tag" style="color:${isAgotado ? 'var(--red)' : 'var(--green)'}">
-                                ${isAgotado ? 'Agotado' : (stock ? 'Stock: ' + stock : 'Disponible')}
-                            </div>
-                            <h3 style="margin:5px 0; color:var(--black); font-size:1.2rem;">${title}</h3>
-                            <p style="font-size:0.85rem; color:#64748b; line-height:1.4; flex-grow:1">${desc}</p>
-                            
-                            <div class="price-box">
-                                ${enPromocion && motivo ? `<div style="color:var(--red); font-size:0.7rem; font-weight:900; margin-bottom:4px; text-transform:uppercase;">${motivo}</div>` : ''}
-                                ${enPromocion ? `<span class="old-price">$${precioBase.toFixed(2)}</span>` : ''}
-                                <span class="current-price">$${precioFinal.toFixed(2)}</span>
-                            </div>
-
-                            <button class="btn-wa" ${isAgotado ? 'disabled' : ''} onclick="window.open('https://wa.me/${TEL}?text=Hola Artemisa, me interesa ${enPromocion ? 'la oferta de ' + (motivo || 'Temporada') : ''} por: *${title}*')">
-                                ${isAgotado ? 'SIN STOCK' : 'ME INTERESA'}
-                            </button>
-                        </div>
-                    </div>`;
-
-                // Clasificación estricta: Si está en promoción, VA A OFERTAS
-                if (enPromocion) {
-                    gridOfertas.innerHTML += cardHTML;
-                    hasOfertas = true;
-                } else if (type.includes('servicio')) {
-                    gridServicios.innerHTML += cardHTML;
-                    hasServicios = true;
-                } else {
-                    gridTienda.innerHTML += cardHTML;
-                    hasTienda = true;
-                }
+                // Guardar en array global para usar en el modal
+                catalogData.push({
+                    title, desc, precioBase, precioFinal, enPromocion, dctoPorcentaje, motivo, stock, img, type, isAgotado
+                });
             });
 
-            // Lógica para auto-seleccionar la pestaña correcta al cargar (Prioridad: Servicios -> Tienda -> Ofertas)
-            if (hasServicios) {
-                filter('servicios', document.getElementById('btn-servicios'));
-            } else if (hasTienda) {
-                filter('tienda', document.getElementById('btn-tienda'));
-            } else if (hasOfertas) {
-                filter('ofertas', document.getElementById('btn-ofertas'));
-            }
+            renderGrids();
 
         } catch (e) {
-            loadingMsg.innerHTML = 'Error de conexión. Verifica tu conexión a internet.';
+            loadingMsg.innerHTML = 'Error de conexión. Verifica tu internet.';
         }
     }
 
+    function renderGrids() {
+        const gridServicios = document.getElementById('grid-servicios');
+        const gridTienda = document.getElementById('grid-tienda');
+        const gridOfertas = document.getElementById('grid-ofertas');
+
+        gridServicios.innerHTML = ''; gridTienda.innerHTML = ''; gridOfertas.innerHTML = '';
+        
+        let hasServicios = false, hasTienda = false, hasOfertas = false;
+
+        catalogData.forEach((item, index) => {
+            const cardHTML = `
+                <div class="card">
+                    ${item.enPromocion ? `<div class="badge-promo">OFERTA -${item.dctoPorcentaje}%</div>` : ''}
+                    <img src="${item.img}" class="card-img" onerror="this.src='https://via.placeholder.com/400x300?text=ARTEMISA'">
+                    <div class="card-content">
+                        <div class="stock-tag" style="color:${item.isAgotado ? 'var(--red)' : 'var(--green)'}">
+                            ${item.isAgotado ? 'Agotado' : (item.stock ? 'Stock: ' + item.stock : 'Disponible')}
+                        </div>
+                        <h3 style="margin:5px 0; color:var(--black); font-size:1.15rem;">${item.title}</h3>
+                        
+                        <p class="desc-preview">${item.desc}</p>
+                        
+                        <button class="btn-specs" onclick="openModal(${index})">📋 Ver Especificaciones</button>
+                        
+                        <div class="price-box">
+                            ${item.enPromocion && item.motivo ? `<div style="color:var(--red); font-size:0.7rem; font-weight:900; margin-bottom:4px; text-transform:uppercase;">${item.motivo}</div>` : ''}
+                            ${item.enPromocion ? `<span class="old-price">$${item.precioBase.toFixed(2)}</span>` : ''}
+                            <span class="current-price">$${item.precioFinal.toFixed(2)}</span>
+                        </div>
+
+                        <button class="btn-add" ${item.isAgotado ? 'disabled' : ''} onclick="openModal(${index})">
+                            ${item.isAgotado ? 'SIN STOCK' : 'AÑADIR AL CARRITO'}
+                        </button>
+                    </div>
+                </div>`;
+
+            if (item.enPromocion) { gridOfertas.innerHTML += cardHTML; hasOfertas = true; } 
+            else if (item.type.includes('servicio')) { gridServicios.innerHTML += cardHTML; hasServicios = true; } 
+            else { gridTienda.innerHTML += cardHTML; hasTienda = true; }
+        });
+
+        // Autoselección de pestaña inicial
+        if (hasServicios) filter('servicios', document.getElementById('btn-servicios'));
+        else if (hasTienda) filter('tienda', document.getElementById('btn-tienda'));
+        else if (hasOfertas) filter('ofertas', document.getElementById('btn-ofertas'));
+    }
+
     function filter(cat, btn) {
-        // Remover clase 'active' de todos los botones y agregar al seleccionado
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
@@ -289,15 +414,135 @@
         const secTienda = document.getElementById('section-tienda');
         const secOfertas = document.getElementById('section-ofertas');
 
-        // Ocultar todas las secciones primero
-        secServicios.style.display = 'none';
-        secTienda.style.display = 'none';
-        secOfertas.style.display = 'none';
+        secServicios.style.display = 'none'; secTienda.style.display = 'none'; secOfertas.style.display = 'none';
 
-        // Mostrar exclusivamente la que se seleccionó
-        if (cat === 'servicios' && document.getElementById('grid-servicios').innerHTML.trim() !== '') secServicios.style.display = 'block';
-        if (cat === 'tienda' && document.getElementById('grid-tienda').innerHTML.trim() !== '') secTienda.style.display = 'block';
-        if (cat === 'ofertas' && document.getElementById('grid-ofertas').innerHTML.trim() !== '') secOfertas.style.display = 'block';
+        if (cat === 'servicios' && document.getElementById('grid-servicios').innerHTML !== '') secServicios.style.display = 'block';
+        if (cat === 'tienda' && document.getElementById('grid-tienda').innerHTML !== '') secTienda.style.display = 'block';
+        if (cat === 'ofertas' && document.getElementById('grid-ofertas').innerHTML !== '') secOfertas.style.display = 'block';
+    }
+
+    // --- LÓGICA DEL MODAL ---
+    function openModal(index) {
+        currentModalItemIndex = index;
+        const item = catalogData[index];
+        
+        document.getElementById('m-img').src = item.img;
+        document.getElementById('m-title').innerText = item.title;
+        document.getElementById('m-desc').innerText = item.desc;
+        document.getElementById('m-qty').value = 1;
+        
+        const stockEl = document.getElementById('m-stock');
+        stockEl.innerText = item.isAgotado ? 'Agotado' : (item.stock ? 'Stock: ' + item.stock : 'Disponible');
+        stockEl.style.color = item.isAgotado ? 'var(--red)' : 'var(--green)';
+
+        const priceEl = document.getElementById('m-price');
+        const oldPriceEl = document.getElementById('m-old-price');
+        priceEl.innerText = `$${item.precioFinal.toFixed(2)}`;
+        
+        if (item.enPromocion) {
+            oldPriceEl.innerText = `$${item.precioBase.toFixed(2)}`;
+            oldPriceEl.style.display = 'inline';
+        } else {
+            oldPriceEl.style.display = 'none';
+        }
+
+        const addBtn = document.getElementById('m-add-btn');
+        addBtn.disabled = item.isAgotado;
+        addBtn.innerText = item.isAgotado ? "SIN STOCK" : "AGREGAR AL CARRITO";
+
+        document.getElementById('modal-specs').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modal-specs').style.display = 'none';
+    }
+
+    function changeModalQty(change) {
+        const input = document.getElementById('m-qty');
+        let newVal = parseInt(input.value) + change;
+        if(newVal < 1) newVal = 1;
+        input.value = newVal;
+    }
+
+    // --- LÓGICA DEL CARRITO ---
+    function addModalToCart() {
+        const item = catalogData[currentModalItemIndex];
+        const qty = parseInt(document.getElementById('m-qty').value);
+        
+        // Verificar si ya existe en carrito
+        const existingItem = cart.find(c => c.index === currentModalItemIndex);
+        if(existingItem) {
+            existingItem.qty += qty;
+        } else {
+            cart.push({ ...item, index: currentModalItemIndex, qty: qty });
+        }
+        
+        updateCartUI();
+        closeModal();
+        toggleCart(); // Abre el sidebar para que vea que se agregó
+    }
+
+    function removeFromCart(cartIndex) {
+        cart.splice(cartIndex, 1);
+        updateCartUI();
+    }
+
+    function toggleCart() {
+        const sidebar = document.getElementById('cart-sidebar');
+        const overlay = document.getElementById('cart-overlay');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+    }
+
+    function updateCartUI() {
+        const container = document.getElementById('cart-items');
+        const badge = document.getElementById('cart-badge-count');
+        const totalEl = document.getElementById('cart-total-price');
+        
+        container.innerHTML = '';
+        let total = 0;
+        let count = 0;
+
+        if(cart.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#94a3b8; margin-top:50px;">El carrito está vacío</p>';
+        } else {
+            cart.forEach((cItem, i) => {
+                const subtotal = cItem.precioFinal * cItem.qty;
+                total += subtotal;
+                count += cItem.qty;
+                
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div style="flex-grow:1; padding-right:10px;">
+                            <div class="cart-item-title">${cItem.title}</div>
+                            <div style="font-size:0.8rem; color:#64748b;">Cant: ${cItem.qty} x $${cItem.precioFinal.toFixed(2)}</div>
+                            <div class="cart-item-price">$${subtotal.toFixed(2)}</div>
+                        </div>
+                        <button class="cart-item-remove" onclick="removeFromCart(${i})">X</button>
+                    </div>
+                `;
+            });
+        }
+
+        badge.innerText = count;
+        totalEl.innerText = `$${total.toFixed(2)}`;
+    }
+
+    function checkoutWA() {
+        if (cart.length === 0) return;
+        
+        let text = "Hola *Artemisa Tech*, me interesa realizar el siguiente pedido del catálogo web:\n\n";
+        let total = 0;
+        
+        cart.forEach(cItem => {
+            const sub = cItem.precioFinal * cItem.qty;
+            total += sub;
+            text += `▪️ *${cItem.qty}x* ${cItem.title} \n   (Subtotal: $${sub.toFixed(2)})\n`;
+        });
+        
+        text += `\n*TOTAL ESTIMADO: $${total.toFixed(2)}*\n\nPor favor, confirmarme disponibilidad y pasos a seguir.`;
+        
+        window.open(`https://wa.me/${TEL}?text=${encodeURIComponent(text)}`);
     }
 </script>
 </body>
