@@ -134,10 +134,9 @@
     </div>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="filter('todos', this)">Todo</button>
-        <button class="tab-btn ofertas" onclick="filter('ofertas', this)">🔥 Ofertas</button>
-        <button class="tab-btn" onclick="filter('servicios', this)">🛠️ Servicios</button>
-        <button class="tab-btn" onclick="filter('tienda', this)">🛒 Tienda</button>
+        <button class="tab-btn ofertas" id="btn-ofertas" onclick="filter('ofertas', this)">🔥 Ofertas</button>
+        <button class="tab-btn" id="btn-servicios" onclick="filter('servicios', this)">🛠️ Servicios</button>
+        <button class="tab-btn" id="btn-tienda" onclick="filter('tienda', this)">🛒 Tienda</button>
     </div>
 
     <div class="container">
@@ -192,7 +191,6 @@
             const res = await fetch(API_URL);
             const data = await res.json();
             
-            // Limpiar cuadrículas y quitar mensaje de carga
             gridOfertas.innerHTML = '';
             gridServicios.innerHTML = '';
             gridTienda.innerHTML = '';
@@ -254,7 +252,6 @@
                         </div>
                     </div>`;
 
-                // Clasificar la tarjeta en su respectiva sección
                 if (enPromocion) {
                     gridOfertas.innerHTML += cardHTML;
                     hasOfertas = true;
@@ -267,10 +264,14 @@
                 }
             });
 
-            // Mostrar solo las secciones que tienen contenido
-            document.getElementById('section-ofertas').style.display = hasOfertas ? 'block' : 'none';
-            document.getElementById('section-servicios').style.display = hasServicios ? 'block' : 'none';
-            document.getElementById('section-tienda').style.display = hasTienda ? 'block' : 'none';
+            // Lógica para auto-seleccionar la pestaña correcta al cargar
+            if (hasOfertas) {
+                filter('ofertas', document.getElementById('btn-ofertas'));
+            } else if (hasServicios) {
+                filter('servicios', document.getElementById('btn-servicios'));
+            } else {
+                filter('tienda', document.getElementById('btn-tienda'));
+            }
 
         } catch (e) {
             loadingMsg.innerHTML = 'Error de conexión. Verifica tu conexión a internet.';
@@ -278,7 +279,6 @@
     }
 
     function filter(cat, btn) {
-        // Estilos de los botones
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
@@ -290,19 +290,16 @@
         const gridServicios = document.getElementById('grid-servicios');
         const gridTienda = document.getElementById('grid-tienda');
 
-        // Lógica de visualización de secciones según el filtro seleccionado
-        if (cat === 'todos') {
-            secOfertas.style.display = gridOfertas.innerHTML.trim() !== '' ? 'block' : 'none';
-            secServicios.style.display = gridServicios.innerHTML.trim() !== '' ? 'block' : 'none';
-            secTienda.style.display = gridTienda.innerHTML.trim() !== '' ? 'block' : 'none';
-        } else {
-            secOfertas.style.display = (cat === 'ofertas' && gridOfertas.innerHTML.trim() !== '') ? 'block' : 'none';
-            secServicios.style.display = (cat === 'servicios' && gridServicios.innerHTML.trim() !== '') ? 'block' : 'none';
-            secTienda.style.display = (cat === 'tienda' && gridTienda.innerHTML.trim() !== '') ? 'block' : 'none';
-        }
+        // Primero ocultamos todas las secciones
+        secOfertas.style.display = 'none';
+        secServicios.style.display = 'none';
+        secTienda.style.display = 'none';
+
+        // Mostramos solo la sección seleccionada si tiene contenido
+        if (cat === 'ofertas' && gridOfertas.innerHTML.trim() !== '') secOfertas.style.display = 'block';
+        if (cat === 'servicios' && gridServicios.innerHTML.trim() !== '') secServicios.style.display = 'block';
+        if (cat === 'tienda' && gridTienda.innerHTML.trim() !== '') secTienda.style.display = 'block';
     }
 </script>
-</body>
-</html>
 </body>
 </html>
