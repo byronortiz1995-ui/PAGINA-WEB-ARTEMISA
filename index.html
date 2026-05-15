@@ -3,78 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARTEMISA | Soluciones Técnicas en Crecimiento</title>
+    <title>ARTEMISA | Soluciones Técnicas & Shop</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
             --gold: #d4af37; --black: #0f172a; --white: #ffffff;
-            --gray-bg: #f8fafc; --green: #22c55e; --slate-200: #e2e8f0;
+            --gray-bg: #f8fafc; --green: #22c55e; --red: #ef4444; --slate-200: #e2e8f0;
         }
 
         body { font-family: 'Inter', sans-serif; background: var(--black); margin: 0; overflow-x: hidden; color: var(--white); }
 
-        .page { display: none; width: 100%; min-height: 100vh; animation: fadeIn 0.3s ease-in-out; }
+        .page { display: none; width: 100%; min-height: 100vh; animation: fadeIn 0.4s ease-in-out; }
         .page.active { display: block; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- HOME --- */
+        /* --- HOME SECTION --- */
         .hero {
             background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), 
                         url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop') center/cover;
             min-height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center; padding: 60px 20px;
+            justify-content: center; align-items: center; text-align: center; padding: 40px 20px;
         }
 
         .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; letter-spacing: 4px; color: var(--gold); margin: 0; }
-        
-        .hero p.intro { 
-            max-width: 650px; margin: 20px 0 35px; font-size: 1.15rem; line-height: 1.6; 
-            color: #e2e8f0; font-weight: 300;
+        .hero p.intro { max-width: 650px; margin: 20px 0 35px; font-size: 1.1rem; color: #e2e8f0; line-height: 1.6; }
+
+        /* Misión y Visión */
+        .identity-container {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; max-width: 900px; margin-bottom: 40px;
         }
 
-        /* --- SECCIÓN MISIÓN Y VISIÓN (ESTILO INTEGRADO) --- */
-        .identity-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 900px;
-            margin-bottom: 50px;
+        .identity-card {
+            background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px;
+            border-left: 4px solid var(--gold); text-align: left;
         }
 
-        .identity-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 15px;
-            border-left: 3px solid var(--gold);
-            text-align: left;
-        }
-
-        .identity-item h2 {
-            font-size: 1.2rem;
-            color: var(--gold);
-            margin: 0 0 10px 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .identity-item p {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #cbd5e1;
-            margin: 0;
-            font-weight: 300;
-        }
+        .identity-card h3 { color: var(--gold); margin: 0 0 10px; text-transform: uppercase; font-size: 1rem; letter-spacing: 1px; }
+        .identity-card p { font-size: 0.9rem; line-height: 1.6; color: #cbd5e1; margin: 0; }
 
         .btn-cta {
             background: var(--gold); color: var(--black); padding: 18px 50px;
             border-radius: 50px; font-weight: 800; border: none; cursor: pointer;
-            text-transform: uppercase; font-size: 1rem; transition: 0.3s;
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+            text-transform: uppercase; transition: 0.3s;
         }
-        .btn-cta:hover { transform: translateY(-3px); background: white; }
+        .btn-cta:hover { transform: scale(1.05); background: var(--white); }
 
-        /* --- CATÁLOGO --- */
+        /* --- CATALOG SECTION --- */
         #view-catalog { background: var(--gray-bg); color: var(--black); }
 
         .app-bar { 
@@ -82,37 +58,39 @@
             display: flex; align-items: center; justify-content: space-between;
             position: sticky; top: 0; z-index: 100; border-bottom: 3px solid var(--gold);
         }
-        .btn-back { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 8px; cursor: pointer; }
 
-        .filter-bar { display: flex; justify-content: center; gap: 10px; padding: 20px; background: white; overflow-x: auto; }
-        .filter-btn { background: #f1f5f9; border: none; padding: 10px 20px; border-radius: 50px; font-weight: 700; cursor: pointer; }
-        .filter-btn.active { background: var(--black); color: var(--gold); }
+        .nav-tabs { display: flex; justify-content: center; gap: 10px; padding: 15px; background: white; border-bottom: 1px solid var(--slate-200); }
+        .tab-btn { background: #f1f5f9; border: none; padding: 10px 25px; border-radius: 50px; font-weight: 700; cursor: pointer; }
+        .tab-btn.active { background: var(--black); color: var(--gold); }
 
         .container { max-width: 1200px; margin: auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
+        /* Product Cards */
         .card { 
-            background: white; border-radius: 15px; overflow: hidden; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;
-            border: 1px solid var(--slate-200);
+            background: white; border-radius: 15px; overflow: hidden; position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; border: 1px solid var(--slate-200);
         }
+
+        .badge-promo { 
+            position: absolute; top: 12px; left: 12px; background: var(--red); color: white; 
+            padding: 6px 12px; border-radius: 8px; font-weight: 900; font-size: 0.75rem; z-index: 10;
+        }
+
         .card-img { width: 100%; height: 210px; object-fit: cover; }
         .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
         
-        .card-title { font-size: 1.3rem; font-weight: 800; margin: 8px 0; color: var(--black); }
-        .card-desc { font-size: 0.9rem; color: #64748b; line-height: 1.5; margin-bottom: 12px; flex-grow: 1; }
-        
-        .price-box { 
-            font-size: 1.6rem; font-weight: 900; color: var(--black); 
-            background: #f8fafc; padding: 10px; border-radius: 10px; 
-            text-align: center; margin: 10px 0; border: 1px solid var(--slate-200);
-        }
+        .stock-tag { font-size: 0.7rem; font-weight: 900; margin-bottom: 8px; text-transform: uppercase; }
+        .price-box { margin: 15px 0; text-align: center; background: #f8fafc; padding: 12px; border-radius: 12px; }
+        .old-price { text-decoration: line-through; color: #94a3b8; font-size: 0.9rem; margin-right: 8px; }
+        .current-price { font-size: 1.8rem; font-weight: 900; color: var(--black); }
 
         .btn-wa { 
-            background: var(--black); color: var(--gold); padding: 15px; 
-            border-radius: 10px; font-weight: 800; border: none; cursor: pointer; width: 100%;
+            background: var(--black); color: var(--gold); padding: 16px; 
+            border-radius: 12px; font-weight: 800; border: none; cursor: pointer; width: 100%; transition: 0.3s;
         }
-        .btn-wa:hover { background: var(--green); color: white; }
+        .btn-wa:hover:not(:disabled) { background: var(--green); color: white; }
+        .btn-wa:disabled { background: #cbd5e1; color: white; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -120,39 +98,39 @@
 <div id="view-home" class="page active">
     <section class="hero">
         <h1>ARTEMISA</h1>
-        <p class="intro">Impulsando soluciones técnicas con dedicación y aprendizaje continuo. Nos capacitamos cada día para brindarte un servicio transparente en soporte IT, mantenimiento y soluciones para tu hogar o negocio.</p>
+        <p class="intro">Soluciones técnicas con transparencia y excelencia. Nos especializamos en soporte IT, seguridad y mantenimiento integral en Zamora Chinchipe.</p>
         
-        <div class="identity-grid">
-            <div class="identity-item">
-                <h2>Misión</h2>
-                <p>Brindar soluciones técnicas honestas y eficientes, utilizando el aprendizaje constante como motor para resolver los problemas tecnológicos y físicos de nuestra comunidad.</p>
+        <div class="identity-container">
+            <div class="identity-card">
+                <h3>Misión</h3>
+                <p>Brindar soluciones técnicas innovadoras y honestas, asegurando la satisfacción total de nuestros clientes mediante un servicio profesional y personalizado.</p>
             </div>
-            <div class="identity-item">
-                <h2>Visión</h2>
-                <p>Convertirnos en el aliado técnico de confianza en la región, destacando por la calidad de nuestros procesos y la transparencia en cada servicio ofrecido.</p>
+            <div class="identity-card">
+                <h3>Visión</h3>
+                <p>Convertirnos en el aliado tecnológico líder de la región, destacando por nuestra constante capacitación y la calidad humana en cada proyecto.</p>
             </div>
         </div>
 
-        <button class="btn-cta" onclick="showCatalog()">Entrar al Catálogo</button>
+        <button class="btn-cta" onclick="showCatalog()">Ver Servicios y Tienda</button>
     </section>
 </div>
 
 <div id="view-catalog" class="page">
     <div class="app-bar">
-        <button class="btn-back" onclick="showHome()">← Volver</button>
-        <span style="font-weight: 800; letter-spacing: 1px;">PORTAFOLIO ARTEMISA</span>
+        <button style="background:none; border:1px solid var(--gold); color:var(--gold); padding:6px 15px; border-radius:10px; cursor:pointer;" onclick="showHome()">← Volver</button>
+        <span style="font-weight: 900;">CATÁLOGO ARTEMISA</span>
         <div style="width: 50px;"></div>
     </div>
 
-    <div class="filter-bar">
-        <button class="filter-btn active" onclick="filter('todos', this)">Todo</button>
-        <button class="filter-btn" onclick="filter('servicio', this)">Servicios</button>
-        <button class="filter-btn" onclick="filter('tienda', this)">Tienda</button>
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="filter('todos', this)">Todo</button>
+        <button class="tab-btn" onclick="filter('servicio', this)">Servicios</button>
+        <button class="tab-btn" onclick="filter('tienda', this)">Tienda</button>
     </div>
 
     <div class="container">
         <div class="grid" id="catalog-grid">
-            <p style="text-align:center; width:100%;">Sincronizando inventario...</p>
+            <p style="color:var(--black); text-align:center; width:100%; padding: 40px;">Cargando información...</p>
         </div>
     </div>
 </div>
@@ -173,52 +151,84 @@
     }
 
     function getVal(item, keys) {
-        const foundKey = Object.keys(item).find(k => keys.includes(k.toLowerCase().trim()));
+        const foundKey = Object.keys(item).find(k => keys.includes(k.toLowerCase().trim().replace(/ /g, "_")));
         return foundKey ? item[foundKey] : "";
     }
 
     async function fetchData() {
         const grid = document.getElementById('catalog-grid');
+        const hoy = new Date(); 
+
         try {
             const res = await fetch(API_URL);
             const data = await res.json();
             grid.innerHTML = '';
 
             data.forEach(item => {
-                const title = getVal(item, ["titulo", "nombre", "item", "title"]);
-                const desc = getVal(item, ["descripcion", "detalle", "description"]);
-                const price = getVal(item, ["precio", "valor", "costo", "price"]);
-                const img = getVal(item, ["imagenurl", "imagen", "foto", "url"]);
-                const type = getVal(item, ["tipo", "categoria"]).toLowerCase();
-                const sub = getVal(item, ["subcategoria", "sub"]).toUpperCase();
+                const title = getVal(item, ["titulo", "nombre"]);
+                const desc = getVal(item, ["descripcion", "detalle"]);
+                const precioBase = parseFloat(getVal(item, ["precio", "valor"])) || 0;
+                
+                // Columnas de Promoción y Gestión
+                const dctoPorcentaje = parseFloat(getVal(item, ["descuento_porcentaje"])) || 0;
+                const motivo = getVal(item, ["motivo_descuento", "motivo"]);
+                const inicioPromo = getVal(item, ["promo_inicio"]);
+                const finPromo = getVal(item, ["promo_fin"]);
+                const stock = getVal(item, ["stock", "cantidad"]);
+                const img = getVal(item, ["imagenurl", "foto"]);
+                const type = (getVal(item, ["tipo", "categoria"]) || "").toLowerCase();
 
                 if(!title) return;
 
+                // Lógica de Validación de Promoción
+                let precioFinal = precioBase;
+                let enPromocion = false;
+
+                if (inicioPromo && finPromo) {
+                    const dInicio = new Date(inicioPromo);
+                    const dFin = new Date(finPromo);
+                    if (hoy >= dInicio && hoy <= dFin && dctoPorcentaje > 0) {
+                        precioFinal = precioBase - (precioBase * (dctoPorcentaje / 100));
+                        enPromocion = true;
+                    }
+                }
+
+                const isAgotado = stock !== "" && parseInt(stock) <= 0;
+
                 grid.innerHTML += `
                     <div class="card" data-type="${type}">
+                        ${enPromocion ? `<div class="badge-promo">OFERTA -${dctoPorcentaje}%</div>` : ''}
                         <img src="${img || 'https://via.placeholder.com/400x300?text=ARTEMISA'}" class="card-img" onerror="this.src='https://via.placeholder.com/400x300?text=ARTEMISA'">
                         <div class="card-content">
-                            <span style="font-size:0.7rem; font-weight:800; color:var(--gold)">${sub || 'GENERAL'}</span>
-                            <div class="card-title">${title}</div>
-                            <div class="card-desc">${desc}</div>
-                            <div class="price-box">${isNaN(price) ? price : '$' + price}</div>
-                            <button class="btn-wa" onclick="window.open('https://wa.me/${TEL}?text=Hola Artemisa, deseo información sobre: *${title}*')">
-                                Me Interesa
+                            <div class="stock-tag" style="color:${isAgotado ? 'var(--red)' : 'var(--green)'}">
+                                ${isAgotado ? 'Agotado' : (stock ? 'Stock: ' + stock : 'Disponible')}
+                            </div>
+                            <h3 style="margin:5px 0; color:var(--black); font-size:1.2rem;">${title}</h3>
+                            <p style="font-size:0.85rem; color:#64748b; line-height:1.4; flex-grow:1">${desc}</p>
+                            
+                            <div class="price-box">
+                                ${enPromocion && motivo ? `<div style="color:var(--red); font-size:0.7rem; font-weight:900; margin-bottom:4px; text-transform:uppercase;">${motivo}</div>` : ''}
+                                ${enPromocion ? `<span class="old-price">$${precioBase.toFixed(2)}</span>` : ''}
+                                <span class="current-price">$${precioFinal.toFixed(2)}</span>
+                            </div>
+
+                            <button class="btn-wa" ${isAgotado ? 'disabled' : ''} onclick="window.open('https://wa.me/${TEL}?text=Hola Artemisa, me interesa ${enPromocion ? 'la oferta de ' + (motivo || 'Temporada') : ''} por: *${title}*')">
+                                ${isAgotado ? 'SIN STOCK' : 'ME INTERESA'}
                             </button>
                         </div>
                     </div>`;
             });
         } catch (e) {
-            grid.innerHTML = '<p>Error al cargar datos. Intente refrescar.</p>';
+            grid.innerHTML = '<p style="color:black; text-align:center; width:100%;">Error de conexión. Verifica tu conexión a internet.</p>';
         }
     }
 
     function filter(cat, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.querySelectorAll('.card').forEach(card => {
-            const t = card.getAttribute('data-type');
-            card.style.display = (cat === 'todos' || t.includes(cat)) ? 'flex' : 'none';
+            const type = card.getAttribute('data-type');
+            card.style.display = (cat === 'todos' || type.includes(cat)) ? 'flex' : 'none';
         });
     }
 </script>
